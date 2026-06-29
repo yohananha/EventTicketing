@@ -1,0 +1,24 @@
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: eventticketing-sql
+    environment:
+      ACCEPT_EULA: "Y"
+      # Dev-only password. Override via .env or secrets in any real deployment.
+      MSSQL_SA_PASSWORD: "Your_strong_Pass123"
+      MSSQL_PID: "Developer"
+    ports:
+      # Host 1434 -> container 1433 (host 1433 is often taken by another local SQL Server).
+      - "1434:1433"
+    volumes:
+      - eventticketing-sqldata:/var/opt/mssql
+    healthcheck:
+      # Container is "healthy" only once the engine accepts logins, so the API can wait on it.
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P \"$$MSSQL_SA_PASSWORD\" -No -Q \"SELECT 1\" || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  eventticketing-sqldata:
