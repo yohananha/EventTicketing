@@ -1,3 +1,4 @@
+using EventTicketing.Models.Dtos;
 using EventTicketing.Models.Entities;
 using EventTicketing.Models.Enums;
 
@@ -52,4 +53,11 @@ public interface ISeatStatusHistoryRepository
     Task<IReadOnlyList<SeatStatusHistory>> GetBySeatAsync(int seatId);
     Task<IReadOnlyList<SeatStatusHistory>> GetByEventAsync(int eventId);
     void Add(SeatStatusHistory entry);
+}
+
+/// <summary>Aggregate report queries that use raw SQL (joins, conditional aggregation, window functions).</summary>
+public interface IReportRepository
+{
+    Task<IReadOnlyList<ActiveEventOverviewRow>> GetActiveEventsOverviewAsync(DateTime nowUtc);
+    Task<IReadOnlyList<DailySalesRow>> GetEventDailySalesAsync(int eventId, DateTime toDateUtc);
 }

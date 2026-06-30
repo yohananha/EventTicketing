@@ -50,4 +50,8 @@ public interface IReportService
 {
     Task<IReadOnlyList<SeatStatusHistoryResponse>> GetSeatHistoryAsync(int seatId);
     Task<EventSalesSummaryResponse> GetEventSalesSummaryAsync(int eventId);
+    /// <summary>Dashboard view of every non-finished event (includes SoldOut to surface data mismatches).</summary>
+    Task<IReadOnlyList<ActiveEventOverviewRow>> GetActiveEventsOverviewAsync();
+    /// <summary>Per-day sales timeline for an event up to <paramref name="toDateUtc"/> (defaults to today UTC).</summary>
+    Task<EventDailySalesResponse> GetEventDailySalesAsync(int eventId, DateTime? toDateUtc = null);
 }

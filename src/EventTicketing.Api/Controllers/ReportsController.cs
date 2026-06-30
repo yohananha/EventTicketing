@@ -20,4 +20,14 @@ public class ReportsController : ControllerBase
     [HttpGet("events/{eventId:int}/sales")]
     public async Task<ActionResult<EventSalesSummaryResponse>> EventSales(int eventId) =>
         Ok(await _reports.GetEventSalesSummaryAsync(eventId));
+
+    /// <summary>Dashboard view: one row per non-finished event with sold/held/available counts and revenue.</summary>
+    [HttpGet("events/active-overview")]
+    public async Task<ActionResult<IReadOnlyList<ActiveEventOverviewRow>>> ActiveEventsOverview() =>
+        Ok(await _reports.GetActiveEventsOverviewAsync());
+
+    /// <summary>Per-day sales timeline for an event (running totals + DENSE_RANK by revenue). Defaults to today UTC.</summary>
+    [HttpGet("events/{eventId:int}/daily-sales")]
+    public async Task<ActionResult<EventDailySalesResponse>> EventDailySales(int eventId, [FromQuery] DateTime? toDate) =>
+        Ok(await _reports.GetEventDailySalesAsync(eventId, toDate));
 }
